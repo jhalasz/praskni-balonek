@@ -1,5 +1,105 @@
 <!doctype html>
-<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Praskni balónky – skupina 4</title>
-<style>*{box-sizing:border-box}body{min-height:100dvh;margin:0;padding:24px;display:grid;place-items:center;background:#dbeaff;color:#24334a;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}main{width:min(100%,550px);background:#fff;padding:clamp(24px,6vw,48px);border-radius:24px;box-shadow:0 12px 40px #0001}.emoji{font-size:72px}h1{margin:8px 0;font-size:clamp(28px,6vw,42px)}p{font-size:19px;line-height:1.5}.version{font-size:14px;color:#667085}a{color:#265eac}</style></head>
-<body><main><div class="emoji" aria-hidden="true">🎈</div><h1>Praskni balónky</h1><h2>Skupina 4</h2><p>Naše hra teprve vznikne. Společně ji naprogramujeme!</p><p class="version">Příprava hry · verze 0.0</p><a href="../">Zpět na přehled skupin</a></main></body></html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#9bdcff">
+<title>Práskni do toho! – Skupina 4</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;padding:12px;background:linear-gradient(#8fd3ff,#e8f8ff);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#183653;text-align:center}
+main{width:min(100%,820px);margin:0 auto}
+header{padding:8px}
+h1{font-size:clamp(30px,6vw,48px);margin:4px 0;color:#174f87;text-shadow:0 2px white}
+.subtitle{margin:4px 0 8px;font-size:17px}
+.version{font-size:13px;color:#45647d;margin:4px}
+.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:12px 0}
+.stat{background:#ffffffed;border-radius:15px;padding:8px 22px;min-width:110px;box-shadow:0 4px 14px #174f8720}
+.stat strong{display:block;font-size:25px}
+.stat span{font-size:13px;color:#45647d}
+button{font:inherit}
+#start{border:0;border-radius:999px;padding:12px 26px;background:#176fc1;color:white;font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 4px 0 #104e8b;touch-action:manipulation}
+#start:active{transform:translateY(2px);box-shadow:0 2px 0 #104e8b}
+button:focus-visible{outline:3px solid #ffbf47;outline-offset:3px}
+#message{min-height:30px;margin:12px;font-weight:700}
+#field{position:relative;overflow:hidden;height:min(58vh,500px);min-height:320px;background:linear-gradient(#78c9ff 0%,#bceaff 68%,#e9f9ff 100%);border:5px solid white;border-radius:24px;box-shadow:0 10px 30px #174f8725;isolation:isolate;touch-action:manipulation}
+.cloud{position:absolute;z-index:-1;width:150px;height:38px;background:#fff;border-radius:50px;opacity:.8;filter:drop-shadow(0 3px 2px #5799c455)}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:58px;height:58px;left:22px;top:-27px}
+.cloud:after{width:75px;height:75px;right:20px;top:-40px}
+.cloud.one{left:5%;top:18%}.cloud.two{right:4%;top:48%;transform:scale(.8)}.cloud.three{left:35%;top:72%;transform:scale(.65)}
+.balloon{position:absolute;z-index:2;width:clamp(48px,8vw,66px);height:clamp(62px,10vw,84px);border-radius:50% 50% 46% 46%;border:2px solid #ffffffa8;box-shadow:inset -8px -8px 0 #00000012,0 4px 8px #174f8730;cursor:pointer;user-select:none;touch-action:manipulation;animation:rise var(--duration) linear forwards}
+.balloon:after{content:"";position:absolute;bottom:-9px;left:calc(50% - 5px);border-width:10px 5px 0;border-style:solid;border-color:inherit;border-left-color:transparent;border-right-color:transparent}
+.balloon:before{content:"";position:absolute;top:15%;left:20%;width:11px;height:19px;border-radius:50%;background:#ffffff88;transform:rotate(25deg)}
+.balloon.rainbow{background:linear-gradient(135deg,#ff4242 0 17%,#ffad32 17% 34%,#ffe34a 34% 50%,#42cf70 50% 66%,#38a8ff 66% 82%,#a45be8 82%)!important;border-color:#fff}
+.balloon.rainbow:after{border-top-color:#a45be8}
+@keyframes rise{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-125%) rotate(5deg)}}
+@media(max-width:480px){body{padding:8px}.stat{padding:7px 14px;min-width:90px}#field{min-height:340px;height:55vh}}
+@media(prefers-reduced-motion:reduce){.balloon{animation-duration:14s!important}}
+</style>
+</head>
+<body>
+<main>
+<header><div aria-hidden="true" style="font-size:48px">🎈🌈🎈</div><h1>Práskni do toho!</h1><p class="subtitle">Skupina 4 – praskni balónky a nasbírej co nejvíc bodů!</p><p class="version">Verze 1.0</p></header>
+<section class="stats" aria-label="Výsledky hry">
+<div class="stat"><strong id="score">0</strong><span>Body</span></div>
+<div class="stat"><strong id="time">30</strong><span>Čas (s)</span></div>
+</section>
+<button id="start" type="button">Začít hru</button>
+<div id="message" role="status" aria-live="polite">Stiskni „Začít hru“ a praskni balónky!</div>
+<div id="field" aria-label="Herní plocha s balónky">
+<div class="cloud one" aria-hidden="true"></div><div class="cloud two" aria-hidden="true"></div><div class="cloud three" aria-hidden="true"></div>
+</div>
+<p>🔴 1 bod · 🔵 2 body · 🟢 5 bodů · 🟡 10 bodů · 🌈 50 bodů</p>
+<a href="../">← Zpět na přehled skupin</a>
+</main>
+<script>
+(()=>{
+const field=document.getElementById('field'),scoreEl=document.getElementById('score'),timeEl=document.getElementById('time'),message=document.getElementById('message'),start=document.getElementById('start');
+const types=[
+ {name:'červený',points:1,color:'#f04452'},
+ {name:'modrý',points:2,color:'#268ee8'},
+ {name:'zelený',points:5,color:'#28b86b'},
+ {name:'zlatý',points:10,color:'#f4bd24'}
+];
+let score=0,time=30,running=false,timer=null,spawnTimer=null,spawned=0;
+function balloons(){return field.querySelectorAll('.balloon')}
+function fillField(){while(running&&balloons().length<5)makeBalloon()}
+function makeBalloon(){
+ if(!running||balloons().length>=5)return;
+ spawned++;
+ const rainbow=spawned%10===0;
+ const type=rainbow?{name:'duhový',points:50,color:'#9b59d0'}:types[Math.floor(Math.random()*types.length)];
+ const b=document.createElement('button');b.type='button';b.className='balloon'+(rainbow?' rainbow':'');
+ b.setAttribute('aria-label','Praskni '+type.name+' balónek za '+type.points+' bodů');
+ b.title=type.name+' balónek: '+type.points+' bodů';
+ if(!rainbow){b.style.background=type.color;b.style.borderColor=type.color}
+ const width=field.clientWidth,height=field.clientHeight;
+ const bw=Math.min(66,Math.max(48,width*.13));
+ b.style.left=(8+Math.random()*Math.max(0,width-bw-16))+'px';
+ b.style.bottom='-95px';
+ const duration=8+Math.random()*4;
+ b.style.setProperty('--duration',duration+'s');
+ b.addEventListener('click',()=>{
+  if(!running)return;
+  score+=type.points;scoreEl.textContent=score;
+  b.remove();message.textContent='+'+type.points+' bodů! Jen tak dál!';
+  fillField();
+ });
+ b.addEventListener('animationend',()=>{if(b.isConnected){b.remove();fillField()}});
+ field.appendChild(b);
+}
+function clearGame(){clearInterval(timer);clearInterval(spawnTimer);balloons().forEach(b=>b.remove())}
+function endGame(){running=false;clearGame();message.textContent='Konec hry! Získali jste '+score+' bodů. Zahrajte si znovu!';start.textContent='Hrát znovu'}
+function begin(){
+ clearGame();score=0;time=30;spawned=0;running=true;
+ scoreEl.textContent='0';timeEl.textContent='30';message.textContent='Do toho! Praskejte balónky!';start.textContent='Začít znovu';
+ fillField();
+ spawnTimer=setInterval(fillField,500);
+ timer=setInterval(()=>{time--;timeEl.textContent=time;if(time<=0)endGame()},1000);
+}
+start.addEventListener('click',begin);
+})();
+</script>
+</body>
+</html>
