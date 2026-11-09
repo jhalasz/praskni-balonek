@@ -35,7 +35,7 @@ button:focus-visible{outline:3px solid #ffbf47;outline-offset:3px}
 .balloon.rainbow:after{border-top-color:#a45be8}
 @keyframes rise{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-125%) rotate(5deg)}}
 @media(max-width:480px){body{padding:8px}.stat{padding:7px 14px;min-width:90px}#field{min-height:340px;height:55vh}}
-@media(prefers-reduced-motion:reduce){.balloon{animation-duration:14s!important}}
+@media(prefers-reduced-motion:reduce){.balloon{animation-duration:6s!important}}
 </style>
 </head>
 <body>
@@ -78,7 +78,7 @@ function makeBalloon(){
  const bw=Math.min(66,Math.max(48,width*.13));
  b.style.left=(8+Math.random()*Math.max(0,width-bw-16))+'px';
  b.style.bottom='-95px';
- const duration=8+Math.random()*4;
+ const duration=4+Math.random()*2;
  b.style.setProperty('--duration',duration+'s');
  b.addEventListener('click',()=>{
   if(!running)return;
