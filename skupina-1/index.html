@@ -1,5 +1,44 @@
 <!doctype html>
-<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#dbeaff">
 <title>Praskni balónky – skupina 1</title>
-<style>*{box-sizing:border-box}body{min-height:100dvh;margin:0;padding:24px;display:grid;place-items:center;background:#dbeaff;color:#24334a;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}main{width:min(100%,550px);background:#fff;padding:clamp(24px,6vw,48px);border-radius:24px;box-shadow:0 12px 40px #0001}.emoji{font-size:72px}h1{margin:8px 0;font-size:clamp(28px,6vw,42px)}p{font-size:19px;line-height:1.5}.version{font-size:14px;color:#667085}a{color:#265eac}</style></head>
-<body><main><div class="emoji" aria-hidden="true">🎈</div><h1>Praskni balónky</h1><h2>Skupina 1</h2><p>Naše hra teprve vznikne. Společně ji naprogramujeme!</p><p class="version">Příprava hry · verze 0.0</p><a href="../">Zpět na přehled skupin</a></main></body></html>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:16px;background:linear-gradient(#dbeaff,#f4f8ff);color:#24334a;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
+main{width:min(100%,650px);margin:0 auto;background:#fff;padding:clamp(18px,4vw,32px);border-radius:24px;box-shadow:0 12px 40px #24456b18}
+h1{font-size:clamp(28px,6vw,42px);margin:4px 0}p{margin:8px 0 18px;font-size:17px}
+.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px 0}.stat{background:#eef5ff;border-radius:14px;padding:10px 18px;min-width:105px;font-weight:700}.stat span{display:block;font-size:25px;color:#245eaa}
+#board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2vw,16px);max-width:480px;margin:20px auto}
+.balloon{border:0;background:transparent;min-height:clamp(85px,19vw,135px);font-size:clamp(48px,11vw,76px);cursor:pointer;touch-action:manipulation;border-radius:18px;transition:transform .12s,background .12s}
+.balloon:active{transform:scale(.82)}.balloon:focus-visible{outline:3px solid #245eaa}
+.balloon.popped{transform:scale(.2);opacity:0}
+button.action{border:0;border-radius:14px;background:#2467b2;color:white;font:700 18px system-ui;padding:13px 28px;cursor:pointer;touch-action:manipulation}
+button.action:focus-visible{outline:3px solid #172f51;outline-offset:3px}
+#message{min-height:28px;font-weight:700;color:#245eaa}.version{font-size:13px;color:#667085;margin-top:22px}a{color:#265eac}
+@media(max-width:380px){body{padding:8px}main{padding:14px}.stat{min-width:88px;padding:8px 12px}}
+</style>
+</head>
+<body><main>
+<div aria-hidden="true" style="font-size:48px">🎈</div>
+<h1>Praskni balónky</h1><h2>Skupina 1</h2>
+<p>Klikni nebo klepni na co nejvíce balónků, než vyprší čas!</p>
+<div class="stats"><div class="stat">Body<span id="score">0</span></div><div class="stat">Čas<span id="time">30</span></div></div>
+<div id="board" aria-label="Balónky k prasknutí"></div>
+<button class="action" id="start">Začít hru</button>
+<p id="message" role="status" aria-live="polite">Připrav se! Máš 30 sekund.</p>
+<div class="version">Verze 1.0</div>
+<p><a href="../">Zpět na přehled skupin</a></p>
+</main>
+<script>
+const board=document.querySelector('#board'),scoreEl=document.querySelector('#score'),timeEl=document.querySelector('#time'),message=document.querySelector('#message'),startBtn=document.querySelector('#start');
+const colors=['🎈','🎈','🎈','🎈','🎈','🎈','🎈','🎈','🎈'];
+let score=0,time=30,playing=false,timer=null;
+function draw(){board.innerHTML='';colors.forEach((c,i)=>{const b=document.createElement('button');b.className='balloon';b.type='button';b.textContent=c;b.setAttribute('aria-label','Praskni balónek');b.disabled=!playing;b.addEventListener('click',()=>pop(b));board.appendChild(b)})}
+function pop(button){if(!playing||button.disabled)return;button.disabled=true;button.classList.add('popped');score++;scoreEl.textContent=score;message.textContent='Povedlo se! 🎉';setTimeout(()=>{if(!playing)return;button.classList.remove('popped');button.disabled=false;button.textContent='🎈'},180)}
+function finish(){playing=false;clearInterval(timer);board.querySelectorAll('button').forEach(b=>b.disabled=true);message.textContent='Čas vypršel! Získal/a jsi '+score+' bodů. Skvělá práce!';startBtn.textContent='Hrát znovu'}
+function begin(){clearInterval(timer);score=0;time=30;playing=true;scoreEl.textContent=score;timeEl.textContent=time;message.textContent='Do toho! Praskej balónky!';startBtn.textContent='Začít znovu';draw();timer=setInterval(()=>{time--;timeEl.textContent=time;if(time<=0)finish()},1000)}
+startBtn.addEventListener('click',begin);draw();
+</script>
+</body></html>
